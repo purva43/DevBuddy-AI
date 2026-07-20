@@ -1,3 +1,5 @@
+import io
+import contextlib
 from ddgs import DDGS
 
 
@@ -57,3 +59,29 @@ def read_file(filepath: str) -> str:
         return f"Error: file not found at '{filepath}'"
     except Exception as e:
         return f"Error reading file: {e}"
+    
+def run_python_code(code: str) -> str:
+    """Execute a small Python snippet for calculations or data processing,
+    and return whatever it prints. Use this for anything more complex than
+    basic arithmetic (loops, lists, string processing, etc).
+    Does NOT have access to files, network, or imports — sandboxed for safety.
+
+    Args:
+        code: valid Python code as a string. Must use print() to show results.
+    """
+    # Very basic safety net: block obviously dangerous keywords.
+    # (Not bulletproof — just a beginner-friendly guardrail for this project.)
+    blocked = ["import", "open(", "exec(", "eval(", "__", "os.", "sys.", "subprocess"]
+    if any(word in code for word in blocked):
+        return "Error: this code contains a blocked operation for safety reasons."
+
+    output_buffer = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(output_buffer):
+            exec(code, {"__builtins__": {"print": print, "range": range, "len": len,
+                                          "sum": sum, "min": min, "max": max,
+                                          "sorted": sorted, "abs": abs, "round": round}})
+        result = output_buffer.getvalue()
+        return result if result else "Code ran with no printed output."
+    except Exception as e:
+        return f"Error running code: {e}"
