@@ -33,3 +33,6 @@ pythonexec(code, {"__builtins__": {"print": print, "range": range, "sum": sum, .
 Normally, Python code has access to everything — reading files, deleting things, talking to the internet. Here, you hand it a tiny toolbox with only print, range, sum, and a few other harmless tools. It literally cannot reach anything else, because you never gave it access.
 Put together, in one sentence:
 A sandboxed code execution tool lets an AI run code to do useful things (like math or logic), while physically boxing it in so it can't touch your files, your computer, or anything dangerous — even if it tried to.
+
+Day 13
+The real-world fix for scanned PDFs is called OCR (Optical Character Recognition) — software that looks at the pixel shapes and guesses what letters they represent 
