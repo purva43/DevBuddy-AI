@@ -2,6 +2,5 @@ from llm_client import ask
 
 history = []
 reply, history = ask(
-    "Run this code: import os; print(os.getcwd())"
-)
+    "Read the file read.pdf and give me a 3-sentence summary.")
 print(reply)

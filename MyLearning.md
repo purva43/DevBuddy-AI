@@ -15,3 +15,21 @@ Reduces token usage.
 Saves API cost and quota.
 Makes responses faster.
 Prevents crashes when reading large files.
+
+day 11
+sandbox
+The problem it solves:
+You want your AI to be able to run code — like doing real calculations, not just guessing at math. But "let the AI run any code it wants" is scary, because code can do anything on your computer: delete files, steal your passwords, mess with your system.
+The idea of a "sandbox":
+A sandbox is a safe, boxed-in space where code can run, but it can't reach anything outside that box. Like literally a kid's sandbox — they can play, dig, build inside it, but the walls stop them from wandering into traffic.
+In your project specifically, your sandbox is two simple walls:
+Wall 1 — a blocklist. Before running any code, you check the text for scary words first:
+pythonblocked = ["import", "open(", "os.", "exec("]
+if any(word in code for word in blocked):
+    return "Error: blocked"
+If the AI tries to write code containing these words, you refuse to run it at all.
+Wall 2 — a limited toolbox. Even if code passes Wall 1, when you actually run it, you only give it a few safe tools to work with:
+pythonexec(code, {"__builtins__": {"print": print, "range": range, "sum": sum, ...}})
+Normally, Python code has access to everything — reading files, deleting things, talking to the internet. Here, you hand it a tiny toolbox with only print, range, sum, and a few other harmless tools. It literally cannot reach anything else, because you never gave it access.
+Put together, in one sentence:
+A sandboxed code execution tool lets an AI run code to do useful things (like math or logic), while physically boxing it in so it can't touch your files, your computer, or anything dangerous — even if it tried to.

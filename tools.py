@@ -1,6 +1,7 @@
 import io
 import contextlib
 from ddgs import DDGS
+from pypdf import PdfReader
 
 
 def calculator(a: float, b: float, operation: str) -> float:
@@ -85,3 +86,29 @@ def run_python_code(code: str) -> str:
         return result if result else "Code ran with no printed output."
     except Exception as e:
         return f"Error running code: {e}"
+    
+
+def read_pdf(filepath: str) -> str:
+    """Extract and return text content from a local PDF file.
+
+    Args:
+        filepath: path to the PDF file, e.g. 'resume.pdf'
+    """
+    try:
+        reader = PdfReader(filepath)
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text() + "\n"
+
+        if not text.strip():
+            return "Error: could not extract any text (this PDF might be a scanned image, not real text)."
+
+        max_chars = 6000
+        if len(text) > max_chars:
+            return text[:max_chars] + "\n\n[...PDF truncated, too long to read fully...]"
+        return text
+
+    except FileNotFoundError:
+        return f"Error: file not found at '{filepath}'"
+    except Exception as e:
+        return f"Error reading PDF: {e}"

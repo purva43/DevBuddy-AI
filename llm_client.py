@@ -3,7 +3,7 @@ from google.genai import types
 from dotenv import load_dotenv
 import os
 import time
-from tools import calculator,web_search,read_file,run_python_code  # import your tool
+from tools import calculator,web_search,read_file,run_python_code,read_pdf  # import your tool
 
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
@@ -27,7 +27,7 @@ def ask(prompt, history=None, max_retries=3):
                 model="gemini-3.1-flash-lite",
                 config=types.GenerateContentConfig(
                     system_instruction=SYSTEM_PROMPT,
-                    tools=[calculator ,web_search,read_file,run_python_code]# <-- give the model access to th
+                    tools=[calculator ,web_search,read_file,run_python_code, read_pdf]# <-- give the model access to th
                 ),
                 contents=history
             )
