@@ -38,3 +38,22 @@ def web_search(query: str) -> str:
         return "\n\n".join(formatted)
     except Exception as e:
         return f"Search failed: {e}"
+    
+def read_file(filepath: str) -> str:
+    """Read and return the contents of a local text file.
+
+    Args:
+        filepath: path to the file, e.g. 'notes.txt' or 'C:/Users/Purva/resume.txt'
+    """
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+        # Guard against dumping a massive file straight into the model
+        max_chars = 5000
+        if len(content) > max_chars:
+            return content[:max_chars] + "\n\n[...file truncated, too long to read fully...]"
+        return content
+    except FileNotFoundError:
+        return f"Error: file not found at '{filepath}'"
+    except Exception as e:
+        return f"Error reading file: {e}"

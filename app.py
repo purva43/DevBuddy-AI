@@ -1,5 +1,5 @@
 from llm_client import ask
 
 history = []
-reply, history = ask("What is the latest stable version of Python? Search if you're not sure.")
+reply, history = ask("Read the file notes.txt and summarize what's in it.")
 print(reply)

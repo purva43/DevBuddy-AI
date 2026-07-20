@@ -1,0 +1,1 @@
+An API is like a digital messenger that allows two different software programs to talk to each other. Think of it as a restaurant waiter who takes your order, delivers it to the kitchen, and brings your food back to your table. It is the technology that lets a weather app on your phone pull real-time forecasts from a completely separate weather database
