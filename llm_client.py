@@ -1,20 +1,16 @@
-
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 import os
 import time
+from tools import calculator  # import your tool
 
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-SYSTEM_PROMPT = "You are DevBuddy, a friendly programming mentor."
+SYSTEM_PROMPT = "You are DevBuddy, a friendly programming mentor. Use tools when they help you give an exact, correct answer."
 
 def ask(prompt, history=None, max_retries=3):
-    """
-    Send a prompt to Gemini, with optional conversation history and retry logic.
-    Returns (reply_text, updated_history).
-    """
     if history is None:
         history = []
 
@@ -24,7 +20,10 @@ def ask(prompt, history=None, max_retries=3):
         try:
             response = client.models.generate_content(
                 model="gemini-3.1-flash-lite",
-                config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                    tools=[calculator]  # <-- give the model access to this function
+                ),
                 contents=history
             )
             history.append(types.Content(role="model", parts=[types.Part(text=response.text)]))
@@ -35,12 +34,3 @@ def ask(prompt, history=None, max_retries=3):
             if attempt == max_retries:
                 return "Sorry, I couldn't reach the AI service right now.", history
             time.sleep(2 ** attempt)
-
-
-def ask_streaming(prompt):
-    """Stream a single response chunk by chunk (no history)."""
-    return client.models.generate_content_stream(
-        model="gemini-flash-latest",
-        config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
-        contents=prompt
-    )
