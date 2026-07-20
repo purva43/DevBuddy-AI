@@ -8,8 +8,13 @@ from tools import calculator,web_search,read_file  # import your tool
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-SYSTEM_PROMPT = "You are DevBuddy, a friendly programming mentor. Use tools when they help you give an exact, correct answer."
-
+SYSTEM_PROMPT = (
+    "You are DevBuddy, a friendly programming mentor. "
+    "You must use the web_search tool for ANY question about current events, "
+    "news, latest versions, or anything time-sensitive — never answer these from memory, "
+    "since your training data has a cutoff and may be outdated. "
+    "Use calculator for any math. Use read_file when asked about a local file."
+)
 def ask(prompt, history=None, max_retries=3):
     if history is None:
         history = []
