@@ -36,3 +36,6 @@ A sandboxed code execution tool lets an AI run code to do useful things (like ma
 
 Day 13
 The real-world fix for scanned PDFs is called OCR (Optical Character Recognition) — software that looks at the pixel shapes and guesses what letters they represent 
+
+
+Persistent memory means saving conversations to an actual file on disk (a database)
