@@ -3,17 +3,18 @@ from google.genai import types
 from dotenv import load_dotenv
 import os
 import time
-from tools import calculator,web_search,read_file,run_python_code,read_pdf  # import your tool
-
+from tools import calculator,web_search,read_file,run_python_code,read_pdf,search_knowledge_base  # import your tool
+ 
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 SYSTEM_PROMPT = (
-    "You are DevBuddy, a friendly programming mentor. "
-    "You must use the web_search tool for ANY question about current events, "
-    "news, latest versions, or anything time-sensitive — never answer these from memory, "
-    "since your training data has a cutoff and may be outdated. "
-    "Use calculator for any math. Use read_file when asked about a local file."
+    "You are DevBuddy, a friendly programming mentor and assistant for THIS specific project. "
+    "For any question about this project itself (its tools, its model choice, its purpose, "
+    "who built it, etc.), you MUST use the search_knowledge_base tool first — "
+    "do not answer from general knowledge, since this project's specific details "
+    "are not something you'd know natively. "
+    "Use calculator for math, web_search for current events, read_file/read_pdf for local files."
 )
 def ask(prompt, history=None, max_retries=3):
     if history is None:
@@ -27,7 +28,7 @@ def ask(prompt, history=None, max_retries=3):
                 model="gemini-3.1-flash-lite",
                 config=types.GenerateContentConfig(
                     system_instruction=SYSTEM_PROMPT,
-                    tools=[calculator ,web_search,read_file,run_python_code, read_pdf]# <-- give the model access to th
+                    tools=[calculator ,web_search,read_file,run_python_code, read_pdf, search_knowledge_base]# <-- give the model access to the knowledge base search tool
                 ),
                 contents=history
             )

@@ -2,7 +2,19 @@ import io
 import contextlib
 from ddgs import DDGS
 from pypdf import PdfReader
+from vector_store import search as vector_search
 
+def search_knowledge_base(query: str) -> str:
+    """Search DevBuddy's stored knowledge base (notes, documents) for
+    information relevant to the query, using semantic (meaning-based) search.
+
+    Args:
+        query: what to search for
+    """
+    results = vector_search(query, n_results=2)
+    if not results:
+        return "No relevant information found in the knowledge base."
+    return "\n\n".join(results)
 
 def calculator(a: float, b: float, operation: str) -> float:
     """Perform a basic arithmetic operation between two numbers.
@@ -112,3 +124,16 @@ def read_pdf(filepath: str) -> str:
         return f"Error: file not found at '{filepath}'"
     except Exception as e:
         return f"Error reading PDF: {e}"
+    from vector_store import search as vector_search
+
+def search_knowledge_base(query: str) -> str:
+    """Search DevBuddy's stored knowledge base (notes, documents) for
+    information relevant to the query, using semantic (meaning-based) search.
+
+    Args:
+        query: what to search for
+    """
+    results = vector_search(query, n_results=2)
+    if not results:
+        return "No relevant information found in the knowledge base."
+    return "\n\n".join(results)
