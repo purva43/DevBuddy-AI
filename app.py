@@ -25,5 +25,8 @@
 
 from llm_client import ask_with_loop
 
-reply, history = ask_with_loop("What is 15 times 4, and also what's the latest stable Python version?")
+reply, history = ask_with_loop(
+    "Search for who won the most recent Nobel Prize in Physics, "
+    "then use the calculator to tell me how many years ago that was from 2026."
+)
 print("\nFINAL ANSWER:", reply)
