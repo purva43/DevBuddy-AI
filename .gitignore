@@ -4,3 +4,4 @@ __pycache__/
 .venv/
 devbuddy_memory.db
 chroma_db/
+devbuddy.log

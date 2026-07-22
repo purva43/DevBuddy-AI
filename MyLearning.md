@@ -49,3 +49,7 @@ Print the values and observe what is actually happening.
 print(f"CHUNK {chunk_count}: text={chunk.text!r}")
 ...
 print(f"TOTAL CHUNKS: {chunk_count}, FULL TEXT LENGTH: {len(full_text)}")
+
+
+pip freeze > requirements.txt 
+This automatically writes out every package currently installed in your environment for creating requirements.txt
