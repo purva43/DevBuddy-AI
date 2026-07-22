@@ -1,2 +1,7 @@
 google-genai
 python-dotenv
+ddgs
+pypdf
+chromadb
+streamlit
+numpy
