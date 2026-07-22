@@ -41,6 +41,7 @@ The real-world fix for scanned PDFs is called OCR (Optical Character Recognition
 Persistent memory means saving conversations to an actual file on disk (a database)
 
 
+
 Never guess why your program is failing.
 Print the values and observe what is actually happening.
 

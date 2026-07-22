@@ -1,9 +1,17 @@
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
+from config import MODEL_NAME
 import os
 import time
 from tools import calculator,web_search,read_file,run_python_code,read_pdf,search_knowledge_base  # import your tool
+import logging
+
+logging.basicConfig(
+    filename="devbuddy.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
  
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
@@ -32,7 +40,7 @@ def ask_with_loop(prompt, history=None, max_steps=5):
         print(f"\n--- Step {step} ---")
 
         response = client.models.generate_content(
-            model="gemini-3.1-flash-lite",
+            model=MODEL_NAME,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
                 tools=[calculator, web_search, read_file, run_python_code, read_pdf, search_knowledge_base]
@@ -65,7 +73,7 @@ def ask(prompt, history=None, max_retries=3):
     for attempt in range(1, max_retries + 1):
         try:
             response = client.models.generate_content(
-                model="gemini-3.1-flash-lite",
+                model=MODEL_NAME,
                 config=types.GenerateContentConfig(
                     system_instruction=SYSTEM_PROMPT,
                     tools=[calculator ,web_search,read_file,run_python_code, read_pdf, search_knowledge_base]# <-- give the model access to the knowledge base search tool
@@ -76,7 +84,7 @@ def ask(prompt, history=None, max_retries=3):
             return response.text, history
 
         except Exception as e:
-            print(f"Attempt {attempt} failed: {e}")
+            logging.warning(f"Attempt {attempt} failed: {e}")
             if attempt == max_retries:
                 return "Sorry, I couldn't reach the AI service right now.", history
             time.sleep(2 ** attempt)
