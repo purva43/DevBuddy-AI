@@ -39,3 +39,12 @@ The real-world fix for scanned PDFs is called OCR (Optical Character Recognition
 
 
 Persistent memory means saving conversations to an actual file on disk (a database)
+
+
+Never guess why your program is failing.
+Print the values and observe what is actually happening.
+
+(This is a debugging technique: when you can't see what's happening inside a black box, you add print statements to expose it.)
+print(f"CHUNK {chunk_count}: text={chunk.text!r}")
+...
+print(f"TOTAL CHUNKS: {chunk_count}, FULL TEXT LENGTH: {len(full_text)}")

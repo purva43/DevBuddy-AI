@@ -31,10 +31,42 @@ if user_input:
     save_message("user", user_input)
 
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            reply, st.session_state.history = ask(user_input, st.session_state.history)
-            st.write(reply)
+        # st.write_stream expects a generator that yields text pieces
+        def stream_response():
+            from llm_client import client, SYSTEM_PROMPT
+            from google.genai import types as genai_types
+            from tools import calculator, web_search, read_file, run_python_code, read_pdf, search_knowledge_base
 
-    save_message("model", reply)
+            st.session_state.history.append(
+                genai_types.Content(role="user", parts=[genai_types.Part(text=user_input)])
+            )
+
+            stream = client.models.generate_content_stream(
+                model="gemini-3.1-flash-lite",
+                config=genai_types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                    tools=[calculator, web_search, read_file, run_python_code, read_pdf, search_knowledge_base]
+                ),
+                contents=st.session_state.history
+            )
+            full_text = ""
+            chunk_count = 0
+            for chunk in stream:
+                chunk_count += 1
+                print(f"CHUNK {chunk_count}: text={chunk.text!r}")
+                if chunk.text:
+                    full_text += chunk.text
+                    yield chunk.text
+
+            print(f"TOTAL CHUNKS: {chunk_count}, FULL TEXT LENGTH: {len(full_text)}")
+
+            st.session_state.history.append(
+                genai_types.Content(role="model", parts=[genai_types.Part(text=full_text)])
+            )
+            st.session_state._last_reply = full_text
+
+    reply = st.write_stream(stream_response())
+
+    save_message("model", st.session_state._last_reply)
     st.session_state.display_messages.append(("user", user_input))
-    st.session_state.display_messages.append(("model", reply))
+    st.session_state.display_messages.append(("model", st.session_state._last_reply))
